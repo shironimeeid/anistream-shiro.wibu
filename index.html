@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>WibuTV - Anime Index</title>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Nonton anime premium sub Indo gratis di Ngewibu.tv. Nikmati koleksi anime terbaru dan terbaik dari Jepang dalam kualitas definisi tinggi dengan subtitle Bahasa Indonesia yang akurat. Tanpa biaya langganan atau pendaftaran."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link id="data-theme" rel="stylesheet" href="/assets/css/light.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://site-assets.fontawesome.com/releases/v6.2.0/css/all.css"
+    />
+    <link rel="stylesheet" href="/assets/css/pagination.css" />
+
+    <script>
+      const BACKEND_URL = "https://api.ngewibu.tv";
+    </script>
+  </head>
+
+  <body>
+    <img
+      style="position: fixed; bottom: 40px; right: 0"
+      src="/assets/img/runa.png"
+      class="img-runa"
+    />
+    <div class="container ps-0 pe-0">
+      <div class="col-md-12 col-md-18 mx-auto" style="max-width: 600px">
+        <div class="row">
+          <div class="col">
+            <div class="banner">
+              <img
+                src="https://pbs.twimg.com/media/EtedXCnU0AEzNIn?format=jpg&name=large"
+                style="opacity: 0.7"
+                class="img-fluid"
+                alt="Banner"
+              />
+              <div
+                class="position-absolute top-50 start-50 translate-middle text-center"
+              >
+                <h1
+                  class="text-light"
+                  style="
+                    text-shadow: -4px -4px 0 #f94622, 1px -1px 0 #f94622,
+                      -4px 4px 0 #f94622, 1px 1px 0 #f94622;
+                  "
+                >
+                  NGEWIBU TV
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3 ps-3 pe-3 mb-3">
+          <div class="col">
+            <form id="search-form" class="d-flex">
+              <input
+                id="search-input"
+                class="form-control form-control-sm me-1"
+                type="search"
+                placeholder="Cari anime"
+                aria-label="Cari anime"
+              />
+              <button
+                id="search-button"
+                class="btn btn-primary btn-sm"
+                type="submit"
+                aria-label="search-anime"
+              >
+                <i class="fa-solid fa-search"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="row mt-3 ps-3 pe-3" id="spinner" style="display: none">
+          <div class="col mx-auto text-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3 ps-3 pe-3" id="alert" style="display: none">
+          <div class="col">
+            <div
+              class="alert alert-danger mt-3"
+              role="alert"
+              style="padding-top: 0.2rem; padding-bottom: 0.2rem"
+            >
+              No results found.
+            </div>
+          </div>
+        </div>
+        <div id="hasil" class="row ps-3 pe-3" style="display: none">
+          <div class="table-responsive">
+            <table
+              id="table_cok"
+              class="table table-light table-striped table-hover table-sm"
+            >
+              <tbody></tbody>
+            </table>
+          </div>
+          <nav
+            aria-label="Page navigation"
+            class="d-flex justify-content-center bg-dark"
+          >
+            <ul
+              class="pagination pagination-sm mb-0 pb-2 pt-2"
+              id="pagination"
+            ></ul>
+          </nav>
+        </div>
+        <hr />
+        <div class="row ps-3 pe-3">
+          <div class="col">
+            <h3
+              class="mb-3 mt-1 ps-3 pe-3"
+              style="
+                font-size: 18px;
+                font-weight: 600;
+                color: #fff;
+                background-color: #181818;
+                padding: 5px;
+                border-radius: 6px;
+                display: inline-block;
+                position: relative;
+              "
+            >
+              Jadwal tayang<span
+                style="
+                  background-color: #00dc5a;
+                  position: absolute;
+                  left: 0;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  width: 3px;
+                  height: 20px;
+                "
+              ></span>
+            </h3>
+          </div>
+          <div class="col">
+            <span id="jam" class="mt-2 badge bg-warning float-end">...</span>
+          </div>
+        </div>
+        <div id="jadwal_tayang" class="row ps-3 pe-3">
+          <div class="col">
+            <div id="release-dates-container" class="overflow-auto">
+              <div
+                id="release-dates"
+                class="btn-group"
+                role="group"
+                aria-label="Release dates"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div id="datajadwal" class="row ps-3 pe-3 mt-2 scroll-ctx">
+          <div
+            class="table-responsive mb-3"
+            style="max-height: 133px; overflow-y: auto"
+          >
+            <table
+              id="table_tayang"
+              style="margin-bottom: 0px"
+              class="table table-light table-striped table-hover table-sm"
+            >
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row ps-3 pe-3">
+          <div class="col">
+            <h3
+              class="mb-3 mt-1 ps-3 pe-3"
+              style="
+                font-size: 18px;
+                font-weight: 600;
+                color: #fff;
+                background-color: #181818;
+                padding: 5px;
+                border-radius: 6px;
+                display: inline-block;
+                position: relative;
+              "
+            >
+              Baru Di Update<span
+                style="
+                  background-color: #00dc5a;
+                  position: absolute;
+                  left: 0;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  width: 3px;
+                  height: 20px;
+                "
+              ></span>
+            </h3>
+          </div>
+        </div>
+
+        <div
+          id="anime_terbaru"
+          class="row row-cols-1 row-cols-md-3 gx-2 gy-4 ps-3 pe-3"
+        ></div>
+
+        <hr />
+        <div class="row ps-3 pe-3">
+          <div class="col">
+            <h3
+              class="mb-3 mt-1 ps-3 pe-3"
+              style="
+                font-size: 18px;
+                font-weight: 600;
+                color: #fff;
+                background-color: #181818;
+                padding: 5px;
+                border-radius: 6px;
+                display: inline-block;
+                position: relative;
+              "
+            >
+              Rekomendasi Anime<span
+                style="
+                  background-color: #00dc5a;
+                  position: absolute;
+                  left: 0;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  width: 3px;
+                  height: 20px;
+                "
+              ></span>
+            </h3>
+          </div>
+        </div>
+
+        <div
+          id="rekomendasi_anime"
+          class="row row-cols-1 row-cols-md-6 gx-2 gy-4 ps-3 pe-3"
+        ></div>
+        <hr />
+
+        <div class="row ps-3 pe-3">
+          <div class="col">
+            <h3
+              class="mb-3 mt-1 ps-3 pe-3"
+              style="
+                font-size: 18px;
+                font-weight: 600;
+                color: #fff;
+                background-color: #181818;
+                padding: 5px;
+                border-radius: 6px;
+                display: inline-block;
+                position: relative;
+              "
+            >
+              Index Anime<span
+                style="
+                  background-color: #00dc5a;
+                  position: absolute;
+                  left: 0;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  width: 3px;
+                  height: 20px;
+                "
+              ></span>
+            </h3>
+          </div>
+        </div>
+
+        <div
+          id="index_anime"
+          class="row row-cols-1 row-cols-md-3 gx-2 gy-4 ps-3 pe-3"
+        ></div>
+        <div id="reload_container" class="row ps-3 pe-3"></div>
+        <div id="index_pagination" class="row ps-3 pe-3 mt-3"></div>
+        <hr />
+        <footer class="container col-md-12 mx-auto mt-4">
+          <button
+            class="btn btn-dark-mode bg-primary text-white mb-3 me-3"
+            id="theme-toggle"
+            style="position: fixed; bottom: 0; right: 0"
+            aria-label="color-mode"
+          >
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+          </button>
+
+          <p class="text-center mb-0">
+            Released under the MIT License.<br />
+            © 2023 -
+            <a href="https://github.com/namdevel/anistream">NgewibuTV</a>
+            and
+            <a href="https://github.com/namdevel/anistream/graphs/contributors"
+              >All Contributors</a
+            >
+          </p>
+          <a
+            style="font-size: 14px"
+            id="commitUrl"
+            target="_blank"
+            class="text-decoration-none"
+            href=""
+            ><p id="commitSha" class="text-center mt-2 mb-0"></p
+          ></a>
+
+          <br />
+        </footer>
+      </div>
+    </div>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/jquery.js"></script>
+    <script type="text/javascript" src="/assets/js/pagination.js"></script>
+    <script src="/assets/js/search.js"></script>
+    <script src="/assets/js/loader.js"></script>
+    <script src="/assets/js/loader-index.js"></script>
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/jadwal.js"></script>
+    <script
+      type="text/javascript"
+      src="//pl18715109.highrevenuegate.com/c3/95/54/c39554b587ada80ff311f8f78d8f63c4.js"
+    ></script>
+  </body>
+</html>

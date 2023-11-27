@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>WibuTV</title>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Nonton anime premium sub Indo gratis di Ngewibu.tv. Nikmati koleksi anime terbaru dan terbaik dari Jepang dalam kualitas definisi tinggi dengan subtitle Bahasa Indonesia yang akurat. Tanpa biaya langganan atau pendaftaran."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link id="data-theme" rel="stylesheet" href="/assets/css/light.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://site-assets.fontawesome.com/releases/v6.2.0/css/all.css"
+    />
+    <link rel="stylesheet" href="/assets/css/pagination.css" />
+    <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
+    <script>
+      const BACKEND_URL = "https://api.ngewibu.tv";
+    </script>
+  </head>
+
+  <body>
+    <div class="container ps-0 pe-0">
+      <div class="col-md-12 col-md-18 mx-auto" style="max-width: 600px">
+        <div class="d-grid">
+          <div class="artplayer-app mb-0"></div>
+          <a
+            href="/"
+            class="btn btn-primary btn-sm br-0"
+            style="border-radius: 0"
+            ><i class="fa-solid fa-angles-left me-2"></i>
+            Back To Home
+          </a>
+        </div>
+        <hr />
+        <div class="row ps-3 pe-3" id="anime_detail"></div>
+        <hr />
+        <div class="row ps-3 pe-3">
+          <div class="col">
+            <h3
+              class="mb-3 mt-1 ps-3 pe-3"
+              style="
+                font-size: 18px;
+                font-weight: 600;
+                color: #fff;
+                background-color: #181818;
+                padding: 5px;
+                border-radius: 6px;
+                display: inline-block;
+                position: relative;
+              "
+            >
+              Semua Episode<span
+                style="
+                  background-color: #00dc5a;
+                  position: absolute;
+                  left: 0;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  width: 3px;
+                  height: 20px;
+                "
+              ></span>
+            </h3>
+          </div>
+        </div>
+        <div
+          id="episodes"
+          class="d-flex flex-wrap justify-content-start mt-1 ps-3 pe-3"
+        ></div>
+        <div id="episodes_pagination" class="row ps-3 pe-3 mt-1"></div>
+        <hr />
+        <footer class="container col-md-12 mx-auto mt-4">
+          <button
+            class="btn btn-dark-mode bg-primary text-white mb-3 me-3"
+            id="theme-toggle"
+            style="position: fixed; bottom: 0; right: 0"
+            aria-label="color-mode"
+          >
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+          </button>
+
+          <p class="text-center mb-0">
+            Released under the MIT License.<br />
+            © 2023 -
+            <a href="https://github.com/namdevel/anistream">NgewibuTV</a>
+            and
+            <a href="https://github.com/namdevel/anistream/graphs/contributors"
+              >All Contributors</a
+            >
+          </p>
+          <a
+            style="font-size: 14px"
+            id="commitUrl"
+            target="_blank"
+            class="text-decoration-none"
+            href=""
+            ><p id="commitSha" class="text-center mt-2 mb-0"></p
+          ></a>
+
+          <br />
+        </footer>
+      </div>
+    </div>
+    <script src="/assets/js/details.js"></script>
+    <script>
+      const container = document.querySelector("#anime_detail");
+      container.addEventListener("click", (event) => {
+        const target = event.target;
+        if (target.classList.contains("show-more")) {
+          const description = container.querySelector(".text-truncate");
+          const moreContent = container.querySelector(".more-content");
+          description.classList.toggle("show-more");
+          moreContent.classList.toggle("text-truncate");
+          target.textContent = description.classList.contains("show-more")
+            ? "Sembunyikan"
+            : "Selengkapnya";
+        }
+      });
+      const toggle = document.querySelector("#theme-toggle");
+      const link = document.querySelector("#data-theme");
+
+      const theme = localStorage.getItem("theme");
+
+      if (theme === "dark") {
+        toggle.classList.add("active");
+        link.href = "/assets/css/dark.css";
+        document.body.classList.add("dark-mode");
+      }
+
+      toggle.addEventListener("click", () => {
+        toggle.classList.toggle("active");
+        if (toggle.classList.contains("active")) {
+          link.href = "/assets/css/dark.css";
+          document.body.classList.add("dark-mode");
+
+          localStorage.setItem("theme", "dark");
+        } else {
+          link.href = "/assets/css/light.css";
+          document.body.classList.remove("dark-mode");
+
+          localStorage.setItem("theme", "light");
+        }
+      });
+
+      const commitUrlElement = document.getElementById("commitUrl"),
+        commitShaElement = document.getElementById("commitSha");
+      fetch("https://api.github.com/repos/namdevel/anistream/commits/main")
+        .then((e) => e.json())
+        .then((e) => {
+          let t = e.sha,
+            a = `https://github.com/namdevel/anistream/commit/${t}`;
+          (commitUrlElement.href = a),
+            (commitShaElement.innerHTML =
+              '<i class="fa-solid fa-code-branch me-1"></i>' + t);
+        })
+        .catch((e) => console.error(e));
+    </script>
+    <script
+      type="text/javascript"
+      src="//pl18715109.highrevenuegate.com/c3/95/54/c39554b587ada80ff311f8f78d8f63c4.js"
+    ></script>
+  </body>
+</html>
